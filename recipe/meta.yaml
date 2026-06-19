@@ -27,9 +27,10 @@ requirements:
     - python
     - pip
     - scikit-build-core >=0.11
-    # nanobind (ABI-sensitive) and typing_extensions are not in CBC; hardpin to the
-    # latest pkgs/main version per AR host-pinning policy (linter: exact pin required).
-    - nanobind 2.12.0
+    # nanobind and typing_extensions are not in CBC; exact-pin per AR host-pinning
+    # policy (linter). nanobind 2.5.0 (not 2.12.0) is the newest with py3.14 builds
+    # on all platforms; satisfies upstream's nanobind >=2,<3.
+    - nanobind 2.5.0
     - setuptools >=45
     - setuptools_scm >=6.2
     - typing_extensions 4.15.0  # [py<311]
