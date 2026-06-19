@@ -50,6 +50,10 @@ test:
 about:
   home: https://github.com/dofuuz/python-soxr
   summary: High quality, one-dimensional sample-rate conversion library
+  description: |
+    Python-SoXR is a Python wrapper of the libsoxr resampling library. It
+    provides fast, high quality, one-dimensional sample-rate conversion for
+    audio and other signals as NumPy arrays.
   doc_url: https://python-soxr.readthedocs.io
   dev_url: https://github.com/dofuuz/python-soxr
   license: LGPL-2.1-or-later
