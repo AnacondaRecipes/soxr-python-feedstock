@@ -10,27 +10,29 @@ source:
   sha256: 9f228ae21c78fa9359ca98d8a5e8e91f30639e438e574133dace62c5b5309e44
 
 build:
-  skip: true  # [py<39]
-  skip: true  # [python_impl == "pypy"]
-  script: {{ PYTHON }} -m pip install . -vv -C cmake.define.USE_SYSTEM_LIBSOXR=ON
   number: 0
+  # Build the bundled libsoxr (USE_SYSTEM_LIBSOXR defaults OFF). pkgs/main's `soxr`
+  # ships only the runtime lib (no libsoxr.so dev symlink), so system linking would fail.
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - cmake
-    - make  # [unix]
+    - ninja-base
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ stdlib("c") }}
+    - {{ stdlib('c') }}
   host:
-    - nanobind >=2.0.0
-    - scikit-build-core >=0.9.0
-    - pip
     - python
-    - setuptools_scm
-    - soxr
+    - pip
+    - scikit-build-core >=0.11
+    # nanobind and typing_extensions are not in CBC; exact-pin per AR host-pinning
+    # policy (linter). nanobind 2.5.0 (not 2.12.0) is the newest with py3.14 builds
+    # on all platforms; satisfies upstream's nanobind >=2,<3.
+    - nanobind 2.5.0
+    - setuptools >=45
+    - setuptools_scm >=6.2
+    - typing_extensions 4.15.0  # [py<311]
   run:
     - python
     - numpy
@@ -50,9 +52,14 @@ test:
 about:
   home: https://github.com/dofuuz/python-soxr
   summary: High quality, one-dimensional sample-rate conversion library
+  description: |
+    Python-SoXR is a Python wrapper of the libsoxr resampling library. It
+    provides fast, high quality, one-dimensional sample-rate conversion for
+    audio and other signals as NumPy arrays.
   doc_url: https://python-soxr.readthedocs.io
   dev_url: https://github.com/dofuuz/python-soxr
   license: LGPL-2.1-or-later
+  license_family: LGPL
   license_file:
     - COPYING.LGPL
     - LICENSE.txt
